@@ -39,6 +39,12 @@ class Game2048:
     def generate_random_empty_cell(self):
         empty_cells = [(i, j) for i in range(4) for j in range(4) if self.board[i][j] == 0]
         return random.choice(empty_cells)
+    
+    def fill_random_empty_cell(self):
+        empty_cells = [(i, j) for i in range(4) for j in range(4) if self.board[i][j] == 0]
+        if empty_cells:
+            random_cell = random.choice(empty_cells)
+            self.board[random_cell[0]][random_cell[1]] = 2
 
     def move_up(self):
         print("Up")
@@ -54,7 +60,7 @@ class Game2048:
                     elif i - 1 >= 0 and self.board[i - 1][j] == self.board[i][j]:
                         self.board[i - 1][j] *= 2
                         self.board[i][j] = 0
-
+        self.fill_random_empty_cell()
         self.draw_board()
 
     def move_down(self):
@@ -71,6 +77,7 @@ class Game2048:
                     elif i + 1 <= 3 and self.board[i + 1][j] == self.board[i][j]:
                         self.board[i + 1][j] *= 2
                         self.board[i][j] = 0
+        self.fill_random_empty_cell()
         self.draw_board()
 
     def move_left(self):
@@ -87,6 +94,7 @@ class Game2048:
                     elif j - 1 >= 0 and self.board[i][j - 1] == self.board[i][j]:
                         self.board[i][j - 1] *= 2
                         self.board[i][j] = 0
+        self.fill_random_empty_cell()
         self.draw_board()
 
     def move_right(self):
@@ -103,6 +111,7 @@ class Game2048:
                     elif j + 1 <= 3 and self.board[i][j + 1] == self.board[i][j]:
                         self.board[i][j + 1] *= 2
                         self.board[i][j] = 0
+        self.fill_random_empty_cell()
         self.draw_board()
 
 if __name__ == "__main__":
