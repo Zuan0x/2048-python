@@ -1,5 +1,6 @@
 import random
 import tkinter as tk
+import tkinter.messagebox as messagebox
 
 class Game2048:
     def __init__(self, master):
@@ -24,6 +25,7 @@ class Game2048:
         self.master.bind("<Down>", lambda event:self.move_down())
         self.master.bind("<Left>", lambda event:self.move_left())
         self.master.bind("<Right>", lambda event:self.move_right())
+        self.master.bind("<Enter>", lambda event:self.show_end_state())
 
     def draw_board(self):
         # Clear the previous labels
@@ -67,6 +69,34 @@ class Game2048:
             random_cell = random.choice(empty_cells)
             self.board[random_cell[0]][random_cell[1]] = 2
 
+    def check_available_moves(self):
+        # Check for available moves on the board
+        for i in range(3):
+            for j in range(3):
+                if (
+                    self.board[i][j] == 0
+                    or self.board[i][j] == self.board[i + 1][j]
+                    or self.board[i][j] == self.board[i][j + 1]
+                ):
+                    return True
+        return False
+
+    def show_end_state(self):
+        # Display an end state message and restart button
+        end_state_message = "Game Over!\nNo more possible moves."
+        restart_button = tk.Button(self.master, text="Restart", command=self.restart_game)
+        messagebox.showinfo("Game Over", end_state_message, detail="No more possible moves.")
+        restart_button.pack()
+
+    def restart_game(self):
+        # Reset the game state and close the end state window or overlay
+        self.board = [[0] * 4 for _ in range(4)]
+        self.start_x1, self.start_y1 = self.generate_random_empty_cell()
+        self.start_x2, self.start_y2 = self.generate_random_empty_cell()
+        self.board[self.start_x1][self.start_y1] = 2
+        self.board[self.start_x2][self.start_y2] = 2
+        self.draw_board()
+
     def move_up(self):
         # Implement logic to move tiles up
         moved = False
@@ -93,6 +123,11 @@ class Game2048:
         if moved:
             self.fill_random_empty_cell()
         self.draw_board()
+
+        # Check for available moves and show end state if needed
+        if not self.check_available_moves():
+            print("No more possible moves.")
+            #self.show_end_state()
 
     def move_down(self):
         moved = False
@@ -121,57 +156,72 @@ class Game2048:
             self.fill_random_empty_cell()
         self.draw_board()
 
-    def move_left(self):
-      # Implement logic to move tiles down
-      moved = False
-      for j in range(1, 4):  # Start from the second column
-        for i in range(4):
-            if self.board[i][j] != 0:
-                # Check if the tile can be moved to the left
-                k = j
-                while k > 0 and (self.board[i][k - 1] == 0 or self.board[i][k - 1] == self.board[i][j]):
-                    k -= 1
+        # Check for available moves and show end state if needed
+        if not self.check_available_moves():
+            print("No more possible moves.")
+            #self.show_end_state()
 
-                if k != j:
-                    # Move the tile to the left
-                    if self.board[i][k] == 0:
-                        self.board[i][k] = self.board[i][j]
-                        self.board[i][j] = 0
-                    # Merge with the tile to the left
-                    elif self.board[i][k] == self.board[i][j]:
-                        self.board[i][k] *= 2
-                        self.board[i][j] = 0
-    
-      if moved:
-        self.fill_random_empty_cell()
-      self.draw_board()
+    def move_left(self):
+        # Implement logic to move tiles down
+        moved = False
+        for j in range(1, 4):  # Start from the second column
+            for i in range(4):
+                if self.board[i][j] != 0:
+                    # Check if the tile can be moved to the left
+                    k = j
+                    while k > 0 and (self.board[i][k - 1] == 0 or self.board[i][k - 1] == self.board[i][j]):
+                        k -= 1
+
+                    if k != j:
+                        # Move the tile to the left
+                        if self.board[i][k] == 0:
+                            self.board[i][k] = self.board[i][j]
+                            self.board[i][j] = 0
+                        # Merge with the tile to the left
+                        elif self.board[i][k] == self.board[i][j]:
+                            self.board[i][k] *= 2
+                            self.board[i][j] = 0
+        
+        if moved:
+            self.fill_random_empty_cell()
+        self.draw_board()
+
+        # Check for available moves and show end state if needed
+        if not self.check_available_moves():
+            print("No more possible moves.")
+            #self.show_end_state()
 
     def move_right(self):
-      # Implement logic to move tiles down
-      moved = False
-      for j in range(3, -1, -1):  # Start from the second bottom row
-        for i in range(4):
-            if self.board[i][j] != 0:
-                # Check if the tile can be moved down
-                k = j
-                while k < 3 and (self.board[i][k + 1] == 0 or self.board[i][k + 1] == self.board[i][j]):
-                    k += 1
+        # Implement logic to move tiles down
+        moved = False
+        for j in range(3, -1, -1):  # Start from the second bottom row
+            for i in range(4):
+                if self.board[i][j] != 0:
+                    # Check if the tile can be moved down
+                    k = j
+                    while k < 3 and (self.board[i][k + 1] == 0 or self.board[i][k + 1] == self.board[i][j]):
+                        k += 1
 
-                if k != j:
-                    # Move the tile down
-                    if self.board[i][k] == 0:
-                        self.board[i][k] = self.board[i][j]
-                        self.board[i][j] = 0
-                        moved = True
-                    # Merge with the tile above
-                    elif self.board[i][k] == self.board[i][j]:
-                        self.board[i][k] *= 2
-                        self.board[i][j] = 0
-                        moved = True
+                    if k != j:
+                        # Move the tile down
+                        if self.board[i][k] == 0:
+                            self.board[i][k] = self.board[i][j]
+                            self.board[i][j] = 0
+                            moved = True
+                        # Merge with the tile above
+                        elif self.board[i][k] == self.board[i][j]:
+                            self.board[i][k] *= 2
+                            self.board[i][j] = 0
+                            moved = True
 
-      if moved:
-        self.fill_random_empty_cell()
-      self.draw_board()
+        if moved:
+            self.fill_random_empty_cell()
+        self.draw_board()
+        
+        # Check for available moves and show end state if needed
+        if not self.check_available_moves():
+            print("No more possible moves.")
+            #self.show_end_state()
 
 if __name__ == "__main__":
     root = tk.Tk()
