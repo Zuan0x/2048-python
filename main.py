@@ -5,7 +5,7 @@ class Game2048:
     def __init__(self, master):
         self.master = master
         self.master.title("2048 Game")
-        self.master.geometry("400x400")
+        self.master.geometry("800x800")
 
         self.board = [[0] * 4 for _ in range(4)]
 
@@ -47,12 +47,15 @@ class Game2048:
             # Add more colors as needed
         }
 
+        # Configure font settings
+        font_settings = ("Helvetica", 64, "bold")  # Adjust the font family, size, and weight
+
         # Draw the board
         for i in range(4):
             for j in range(4):
                 tile_value = self.board[i][j]
                 color = color_map.get(tile_value, "white") # Default color is white
-                tk.Label(self.master, text=str(tile_value), width=5, height=2, bg=color, borderwidth=1, relief="solid").grid(row=i, column=j)
+                tk.Label(self.master, text=str(tile_value) , width=4, height=2, bg=color, borderwidth=1, font=font_settings, relief="solid").grid(row=i, column=j)
 
     def generate_random_empty_cell(self):
         empty_cells = [(i, j) for i in range(4) for j in range(4) if self.board[i][j] == 0]
