@@ -1,6 +1,7 @@
 import random
 import tkinter as tk
 import tkinter.messagebox as messagebox
+import simpleaudio
 
 class Game2048:
     def __init__(self, master):
@@ -25,7 +26,9 @@ class Game2048:
         self.master.bind("<Down>", lambda event:self.move_down())
         self.master.bind("<Left>", lambda event:self.move_left())
         self.master.bind("<Right>", lambda event:self.move_right())
-        self.master.bind("<Enter>", lambda event:self.show_end_state())
+
+        self.move_sound = simpleaudio.WaveObject.from_wave_file("pop.wav") # Replace with your sound file
+
 
     def draw_board(self):
         # Clear the previous labels
@@ -97,6 +100,11 @@ class Game2048:
         self.board[self.start_x2][self.start_y2] = 2
         self.draw_board()
 
+        # Destroy any existing restart button
+        for widget in self.master.winfo_children():
+            if isinstance(widget, tk.Button) and widget.cget("text") == "Restart":
+                widget.destroy()
+
     def move_up(self):
         # Implement logic to move tiles up
         moved = False
@@ -121,7 +129,9 @@ class Game2048:
                             moved = True
 
         if moved:
+            play_obj = self.move_sound.play()  # Play move sound
             self.fill_random_empty_cell()
+            
         self.draw_board()
 
         # Check for available moves and show end state if needed
@@ -153,6 +163,7 @@ class Game2048:
                             moved = True
 
         if moved:
+            play_obj = self.move_sound.play()  # Play move sound
             self.fill_random_empty_cell()
         self.draw_board()
 
@@ -177,13 +188,17 @@ class Game2048:
                         if self.board[i][k] == 0:
                             self.board[i][k] = self.board[i][j]
                             self.board[i][j] = 0
+                            moved = True
                         # Merge with the tile to the left
                         elif self.board[i][k] == self.board[i][j]:
                             self.board[i][k] *= 2
                             self.board[i][j] = 0
+                            moved = True
         
         if moved:
+            play_obj = self.move_sound.play()  # Play move sound
             self.fill_random_empty_cell()
+
         self.draw_board()
 
         # Check for available moves and show end state if needed
@@ -215,7 +230,9 @@ class Game2048:
                             moved = True
 
         if moved:
+            play_obj = self.move_sound.play()  # Play move sound
             self.fill_random_empty_cell()
+
         self.draw_board()
         
         # Check for available moves and show end state if needed
