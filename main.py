@@ -68,8 +68,8 @@ class Game2048:
             self.board[random_cell[0]][random_cell[1]] = 2
 
     def move_up(self):
-        print("Up")
         # Implement logic to move tiles up
+        moved = False
         for i in range(1, 4):  # Start from the second row
             for j in range(4):
                 if self.board[i][j] != 0:
@@ -83,18 +83,21 @@ class Game2048:
                         if self.board[k][j] == 0:
                             self.board[k][j] = self.board[i][j]
                             self.board[i][j] = 0
+                            moved = True
                         # Merge with the tile above
                         elif self.board[k][j] == self.board[i][j]:
                             self.board[k][j] *= 2
                             self.board[i][j] = 0
+                            moved = True
 
-        self.fill_random_empty_cell()
+        if moved:
+            self.fill_random_empty_cell()
         self.draw_board()
 
     def move_down(self):
-        print("Down")
+        moved = False
         # Implement logic to move tiles down
-        for i in range(0, 3):  # Start from the second bottom row
+        for i in range(3, -1, -1):  # Start from the second bottom row
             for j in range(4):
                 if self.board[i][j] != 0:
                     # Check if the tile can be moved down
@@ -107,61 +110,68 @@ class Game2048:
                         if self.board[k][j] == 0:
                             self.board[k][j] = self.board[i][j]
                             self.board[i][j] = 0
+                            moved = True
                         # Merge with the tile above
                         elif self.board[k][j] == self.board[i][j]:
                             self.board[k][j] *= 2
                             self.board[i][j] = 0
+                            moved = True
 
-        self.fill_random_empty_cell()
+        if moved:
+            self.fill_random_empty_cell()
         self.draw_board()
 
     def move_left(self):
-      print("Left")
       # Implement logic to move tiles down
-      for i in range(4):  # Start from the second bottom row
-        for j in range(1, 4):
+      moved = False
+      for j in range(1, 4):  # Start from the second column
+        for i in range(4):
             if self.board[i][j] != 0:
-                # Check if the tile can be moved down
+                # Check if the tile can be moved to the left
                 k = j
                 while k > 0 and (self.board[i][k - 1] == 0 or self.board[i][k - 1] == self.board[i][j]):
                     k -= 1
 
-                if k != i:
-                    # Move the tile down
+                if k != j:
+                    # Move the tile to the left
                     if self.board[i][k] == 0:
                         self.board[i][k] = self.board[i][j]
                         self.board[i][j] = 0
-                    # Merge with the tile above
+                    # Merge with the tile to the left
                     elif self.board[i][k] == self.board[i][j]:
                         self.board[i][k] *= 2
                         self.board[i][j] = 0
-
+    
+      if moved:
         self.fill_random_empty_cell()
-        self.draw_board()
+      self.draw_board()
 
     def move_right(self):
-      print("Left")
       # Implement logic to move tiles down
-      for i in range(4):  # Start from the second bottom row
-        for j in range(0, 3):
+      moved = False
+      for j in range(3, -1, -1):  # Start from the second bottom row
+        for i in range(4):
             if self.board[i][j] != 0:
                 # Check if the tile can be moved down
                 k = j
                 while k < 3 and (self.board[i][k + 1] == 0 or self.board[i][k + 1] == self.board[i][j]):
                     k += 1
 
-                if k != i:
+                if k != j:
                     # Move the tile down
                     if self.board[i][k] == 0:
                         self.board[i][k] = self.board[i][j]
                         self.board[i][j] = 0
+                        moved = True
                     # Merge with the tile above
                     elif self.board[i][k] == self.board[i][j]:
                         self.board[i][k] *= 2
                         self.board[i][j] = 0
+                        moved = True
 
+      if moved:
         self.fill_random_empty_cell()
-        self.draw_board()
+      self.draw_board()
 
 if __name__ == "__main__":
     root = tk.Tk()
