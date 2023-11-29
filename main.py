@@ -30,11 +30,29 @@ class Game2048:
         for widget in self.master.winfo_children():
             widget.destroy()
 
+         # Define a color map for tile values
+        color_map = {
+            0: "gray",  # Adjust the color for empty cells
+            2: "lightblue",
+            4: "lightgreen",
+            8: "lightcoral",
+            16: "lightgoldenrodyellow",
+            32: "lightsalmon",
+            64: "lightseagreen",
+            128: "lightskyblue",
+            256: "lightsteelblue",
+            512: "lightyellow",
+            1024: "lightcyan",
+            2048: "lightpink",
+            # Add more colors as needed
+        }
+
         # Draw the board
         for i in range(4):
             for j in range(4):
                 tile_value = self.board[i][j]
-                tk.Label(self.master, text=str(tile_value), width=5, height=2, borderwidth=1, relief="solid").grid(row=i, column=j)
+                color = color_map.get(tile_value, "white") # Default color is white
+                tk.Label(self.master, text=str(tile_value), width=5, height=2, bg=color, borderwidth=1, relief="solid").grid(row=i, column=j)
 
     def generate_random_empty_cell(self):
         empty_cells = [(i, j) for i in range(4) for j in range(4) if self.board[i][j] == 0]
